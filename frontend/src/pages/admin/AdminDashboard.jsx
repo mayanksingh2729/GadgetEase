@@ -5,21 +5,27 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchStats = async () => {
+    try {
+      const { data } = await API.get("/admin/stats");
+      setStats(data);
+    } catch (err) {
+      console.error("Error fetching stats:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const { data } = await API.get("/admin/stats");
-        setStats(data);
-      } catch (err) {
-        console.error("Error fetching stats:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchStats();
+
+    // Listen for new order events to auto-refresh
+    const handler = () => fetchStats();
+    window.addEventListener("new-order", handler);
+    return () => window.removeEventListener("new-order", handler);
   }, []);
 
-  if (loading) return <div className="flex justify-center items-center min-h-[60vh]"><p className="text-gray-500 text-lg">Loading dashboard...</p></div>;
+  if (loading) return <div className="flex justify-center items-center min-h-[60vh]"><p className="text-gray-500 dark:text-gray-400 text-lg">Loading dashboard...</p></div>;
 
   return (
     <div className="p-6">
@@ -27,42 +33,42 @@ const AdminDashboard = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-          <p className="text-gray-500 text-sm font-medium">Total Users</p>
-          <p className="text-3xl font-bold text-gray-800">{stats?.totalUsers || 0}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Users</p>
+          <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{stats?.totalUsers || 0}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-sky-400">
-          <p className="text-gray-500 text-sm font-medium">Total Orders</p>
-          <p className="text-3xl font-bold text-gray-800">{stats?.totalOrders || 0}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-sky-400">
+          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Orders</p>
+          <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{stats?.totalOrders || 0}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
-          <p className="text-gray-500 text-sm font-medium">Total Products</p>
-          <p className="text-3xl font-bold text-gray-800">{stats?.totalProducts || 0}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-purple-500">
+          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Products</p>
+          <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{stats?.totalProducts || 0}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
-          <p className="text-gray-500 text-sm font-medium">Total Revenue</p>
-          <p className="text-3xl font-bold text-gray-800">&#8377;{stats?.totalRevenue || 0}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
+          <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Revenue</p>
+          <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">&#8377;{stats?.totalRevenue || 0}</p>
         </div>
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
         <h2 className="text-xl font-bold mb-4">Recent Orders</h2>
         {stats?.recentOrders?.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            <table className="w-full text-left min-w-[500px]">
               <thead>
-                <tr className="border-b bg-gray-50">
-                  <th className="py-3 px-4 text-sm font-semibold text-gray-600">Order ID</th>
-                  <th className="py-3 px-4 text-sm font-semibold text-gray-600">Customer</th>
-                  <th className="py-3 px-4 text-sm font-semibold text-gray-600">Amount</th>
-                  <th className="py-3 px-4 text-sm font-semibold text-gray-600">Status</th>
-                  <th className="py-3 px-4 text-sm font-semibold text-gray-600">Date</th>
+                <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+                  <th className="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Order ID</th>
+                  <th className="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Customer</th>
+                  <th className="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Amount</th>
+                  <th className="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Status</th>
+                  <th className="py-3 px-4 text-sm font-semibold text-gray-600 dark:text-gray-400">Date</th>
                 </tr>
               </thead>
               <tbody>
                 {stats.recentOrders.map((order) => (
-                  <tr key={order._id} className="border-b hover:bg-gray-50">
+                  <tr key={order._id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="py-3 px-4 text-sm font-mono">{order._id.slice(-8)}</td>
                     <td className="py-3 px-4 text-sm">{order.userId?.name || "N/A"}</td>
                     <td className="py-3 px-4 text-sm font-semibold">&#8377;{order.totalAmount}</td>
@@ -74,7 +80,7 @@ const AdminDashboard = () => {
                                 "bg-gray-100 text-gray-700"
                         }`}>{order.status}</span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td className="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>

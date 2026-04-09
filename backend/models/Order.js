@@ -14,6 +14,13 @@ const orderSchema = new mongoose.Schema(
         duration: String,
         security: { type: Number, default: 0 },
         totalPrice: Number,
+        startDate: { type: Date },
+        endDate: { type: Date },
+        returnStatus: {
+          type: String,
+          enum: ["not-returned", "return-requested", "returned", "deposit-refunded"],
+          default: "not-returned",
+        },
       },
     ],
     shippingAddress: {

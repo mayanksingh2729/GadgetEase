@@ -35,6 +35,26 @@ const AdminOrders = () => {
     }
   };
 
+  const processReturn = async (orderId, itemIndex, action) => {
+    try {
+      const { data } = await API.put(`/admin/orders/${orderId}/process-return`, { itemIndex, action });
+      setOrders(orders.map((o) => (o._id === orderId ? data.order : o)));
+      showSuccess(`Item marked as ${action}`);
+    } catch (err) {
+      showError("Failed to process return");
+    }
+  };
+
+  const returnStatusColor = (status) => {
+    const colors = {
+      "not-returned": "bg-orange-100 text-orange-700",
+      "return-requested": "bg-purple-100 text-purple-700",
+      "returned": "bg-green-100 text-green-700",
+      "deposit-refunded": "bg-emerald-100 text-emerald-700",
+    };
+    return colors[status] || "";
+  };
+
   const statusColor = (status) => {
     const colors = {
       pending: "bg-gray-100 text-gray-700",
@@ -46,25 +66,25 @@ const AdminOrders = () => {
     return colors[status] || "bg-gray-100 text-gray-700";
   };
 
-  if (loading) return <div className="flex justify-center items-center min-h-[60vh]"><p className="text-gray-500 text-lg">Loading orders...</p></div>;
+  if (loading) return <div className="flex justify-center items-center min-h-[60vh]"><p className="text-gray-500 dark:text-gray-400 text-lg">Loading orders...</p></div>;
 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Manage Orders</h1>
 
       {orders.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-md p-10 text-center">
-          <p className="text-gray-500 text-lg">No orders yet.</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-10 text-center">
+          <p className="text-gray-500 dark:text-gray-400 text-lg">No orders yet.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
-            <div key={order._id} className="bg-white rounded-xl shadow-md p-6">
+            <div key={order._id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
               <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-gray-500">Order ID: <span className="font-mono">{order._id.slice(-8)}</span></p>
-                  <p className="text-sm text-gray-500">Customer: <span className="font-medium text-gray-800">{order.userId?.name || "N/A"} ({order.userId?.email || ""})</span></p>
-                  <p className="text-sm text-gray-500">Date: {new Date(order.createdAt).toLocaleString()}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Order ID: <span className="font-mono">{order._id.slice(-8)}</span></p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Customer: <span className="font-medium text-gray-800 dark:text-gray-100">{order.userId?.name || "N/A"} ({order.userId?.email || ""})</span></p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Date: {new Date(order.createdAt).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xl font-bold">&#8377;{order.totalAmount}</p>
@@ -74,15 +94,43 @@ const AdminOrders = () => {
                 </div>
               </div>
 
-              <div className="border-t pt-3 mb-3">
+              <div className="border-t dark:border-gray-700 pt-3 mb-3">
                 <p className="text-sm font-semibold mb-2">Items ({order.items?.length || 0}):</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="space-y-2">
                   {order.items?.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 bg-gray-50 rounded-lg p-2">
+                    <div key={idx} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                       {item.image && <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />}
-                      <div>
+                      <div className="flex-1">
                         <p className="text-sm font-medium">{item.name}</p>
-                        <p className="text-xs text-gray-500">Qty: {item.quantity} | {item.duration} | &#8377;{item.totalPrice}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Qty: {item.quantity} | {item.duration} | &#8377;{item.totalPrice}</p>
+                        {item.startDate && (
+                          <p className="text-xs text-gray-400">
+                            {new Date(item.startDate).toLocaleDateString()} → {new Date(item.endDate).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {item.returnStatus && item.returnStatus !== "not-returned" && (
+                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${returnStatusColor(item.returnStatus)}`}>
+                            {item.returnStatus.replace("-", " ")}
+                          </span>
+                        )}
+                        {item.returnStatus === "return-requested" && (
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => processReturn(order._id, idx, "returned")}
+                              className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded font-medium hover:bg-green-100"
+                            >
+                              Confirm Return
+                            </button>
+                            <button
+                              onClick={() => processReturn(order._id, idx, "deposit-refunded")}
+                              className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded font-medium hover:bg-emerald-100"
+                            >
+                              Refund Deposit
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -90,9 +138,9 @@ const AdminOrders = () => {
               </div>
 
               {order.shippingAddress && (
-                <div className="border-t pt-3 mb-3">
+                <div className="border-t dark:border-gray-700 pt-3 mb-3">
                   <p className="text-sm font-semibold mb-1">Shipping Address:</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {order.shippingAddress.fullName}, {order.shippingAddress.phone}<br />
                     {order.shippingAddress.addressLine1}
                     {order.shippingAddress.addressLine2 ? `, ${order.shippingAddress.addressLine2}` : ""}<br />
@@ -101,12 +149,12 @@ const AdminOrders = () => {
                 </div>
               )}
 
-              <div className="border-t pt-3 flex items-center gap-3">
+              <div className="border-t dark:border-gray-700 pt-3 flex items-center gap-3">
                 <label className="text-sm font-medium">Update Status:</label>
                 <select
                   value={order.status}
                   onChange={(e) => updateStatus(order._id, e.target.value)}
-                  className="border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="border dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100"
                 >
                   <option value="pending">Pending</option>
                   <option value="confirmed">Confirmed</option>
@@ -123,18 +171,18 @@ const AdminOrders = () => {
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-6">
           <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1}
-            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition">
+            className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition">
             Previous
           </button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button key={p} onClick={() => setPage(p)}
-              className={`w-10 h-10 rounded-lg text-sm font-medium transition ${page === p ? "bg-gray-900 text-white" : "bg-gray-200 hover:bg-gray-300"
+              className={`w-10 h-10 rounded-lg text-sm font-medium transition ${page === p ? "bg-gray-900 text-white" : "bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500"
                 }`}>
               {p}
             </button>
           ))}
           <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages}
-            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition">
+            className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition">
             Next
           </button>
         </div>

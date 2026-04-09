@@ -51,10 +51,10 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center py-10">
-      <div className="bg-white shadow-2xl rounded-lg px-6 pt-5 pb-4 w-95 animate-fadeIn">
-        <h2 className="text-center text-2xl font-bold text-gray-700">Welcome Back, Shopper!</h2>
-        <p className="text-center text-lg text-gray-500 mt-1">Login to access your cart and orders</p>
-        <hr className="my-4 border-gray-300" />
+      <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-lg px-4 sm:px-6 pt-5 pb-4 w-full max-w-sm mx-auto animate-fadeIn">
+        <h2 className="text-center text-2xl font-bold text-gray-700 dark:text-gray-100">Welcome Back, Shopper!</h2>
+        <p className="text-center text-lg text-gray-500 dark:text-gray-400 mt-1">Login to access your cart and orders</p>
+        <hr className="my-4 border-gray-300 dark:border-gray-600" />
         <form onSubmit={handleSubmit}>
           <InputField label="Email" type="email" value={email} onChange={setEmail} />
           <InputField
@@ -84,7 +84,12 @@ const Login = () => {
           </button>
         </form>
         {message && <p className="text-center mt-3 font-semibold text-red-500 animate-message">{message}</p>}
-        <p className="text-center text-gray-500 mt-4">
+        <p className="text-center mt-3">
+          <Link to="/forgot-password" className="text-gray-500 text-sm hover:underline">
+            Forgot Password?
+          </Link>
+        </p>
+        <p className="text-center text-gray-500 mt-3">
           Don't have an account?{" "}
           <Link to="/signup" className="text-blue-500 font-semibold hover:underline">
             Sign Up
@@ -110,12 +115,12 @@ const Login = () => {
 
 const InputField = ({ label, type, value, onChange, endAdornment }) => (
   <div className="mb-4 relative">
-    <label className="block text-gray-600 font-semibold">{label}</label>
+    <label className="block text-gray-600 dark:text-gray-300 font-semibold">{label}</label>
     <input
       type={type}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+      className="w-full mt-1 p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400"
       required
     />
     {endAdornment}

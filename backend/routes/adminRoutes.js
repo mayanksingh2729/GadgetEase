@@ -17,7 +17,9 @@ router.delete("/users/:id", adminController.deleteUser);
 
 // Orders
 router.get("/orders", adminController.getAllOrders);
-router.put("/orders/:id/status", adminController.updateOrderStatus);
+const { validateAdminOrderStatus } = require("../middleware/validators");
+router.put("/orders/:id/status", validateAdminOrderStatus, adminController.updateOrderStatus);
+router.put("/orders/:id/process-return", adminController.processReturn);
 
 // Products (admin CRUD)
 router.get("/products", adminController.getAllProducts);

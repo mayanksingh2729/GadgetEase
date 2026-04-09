@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ["user", "admin"], default: "user" },
   avatarUrl: { type: String, default: "https://via.placeholder.com/150/0000FF/FFFFFF?text=Avatar" },
   addresses: [addressSchema],
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

@@ -40,12 +40,12 @@ const PaymentSuccess = () => {
   }, [searchParams]);
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-16 text-center">
+    <div className="max-w-lg mx-auto px-4 py-8 sm:py-16 text-center">
       {status === "verifying" && (
         <div>
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-6"></div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Verifying Payment...</h1>
-          <p className="text-gray-500">Please wait while we confirm your payment.</p>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Verifying Payment...</h1>
+          <p className="text-gray-500 dark:text-gray-400">Please wait while we confirm your payment.</p>
         </div>
       )}
 
@@ -56,15 +56,15 @@ const PaymentSuccess = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">Payment Successful!</h1>
-          <p className="text-gray-500 mb-8">Your order has been placed and confirmed. You can track it in your orders.</p>
-          <div className="flex gap-4 justify-center">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">Payment Successful!</h1>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">Your order has been placed and confirmed. You can track it in your orders.</p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <button onClick={() => navigate("/orders")}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition">
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition">
               View My Orders
             </button>
             <button onClick={() => navigate("/")}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-xl font-bold transition">
+              className="w-full sm:w-auto bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-xl font-bold transition">
               Continue Shopping
             </button>
           </div>
@@ -78,15 +78,15 @@ const PaymentSuccess = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">Payment Failed</h1>
-          <p className="text-gray-500 mb-8">Something went wrong with your payment. Please try again.</p>
-          <div className="flex gap-4 justify-center">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">Payment Failed</h1>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">Something went wrong with your payment. Please try again.</p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <button onClick={() => navigate("/checkout")}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition">
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition">
               Try Again
             </button>
             <button onClick={() => navigate("/")}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-xl font-bold transition">
+              className="w-full sm:w-auto bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-xl font-bold transition">
               Go Home
             </button>
           </div>

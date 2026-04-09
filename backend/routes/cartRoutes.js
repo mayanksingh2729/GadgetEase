@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const cartController = require("../controllers/cartController");
-const verifyToken = require("../middleware/verifyToken");
+const authMiddleware = require("../middleware/authMiddleware");
+const { validateAddToCart } = require("../middleware/validators");
 
-router.get("/", verifyToken, cartController.getCart);
-router.post("/add", verifyToken, cartController.addToCart);
-router.put("/:productId", verifyToken, cartController.updateCart);
-router.delete("/:productId", verifyToken, cartController.removeFromCart);
-router.delete("/clear", verifyToken, cartController.clearCart);
+router.get("/", authMiddleware, cartController.getCart);
+router.post("/add", authMiddleware, validateAddToCart, cartController.addToCart);
+router.put("/:productId", authMiddleware, cartController.updateCart);
+router.delete("/:productId", authMiddleware, cartController.removeFromCart);
+router.delete("/clear", authMiddleware, cartController.clearCart);
 
 module.exports = router;

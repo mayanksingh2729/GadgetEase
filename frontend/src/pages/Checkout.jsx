@@ -136,7 +136,7 @@ const Checkout = () => {
     return (
       <div className="max-w-3xl mx-auto p-8 text-center">
         <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
-        <p className="text-gray-500 mb-6">Add some products before checking out.</p>
+        <p className="text-gray-500 dark:text-gray-400 mb-6">Add some products before checking out.</p>
         <button onClick={() => navigate("/")}
           className="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
           Browse Products
@@ -149,10 +149,10 @@ const Checkout = () => {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
         {/* Left - Shipping Address */}
         <div className="lg:w-3/5">
-          <div className="bg-white rounded-2xl shadow-md p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
             <h2 className="text-xl font-bold mb-5 flex items-center gap-2">
               <span className="bg-gray-900 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">1</span>
               Shipping Address
@@ -166,19 +166,19 @@ const Checkout = () => {
                     key={addr._id}
                     onClick={() => { setSelectedAddressId(addr._id); setError(""); }}
                     className={`p-4 rounded-xl border-2 cursor-pointer transition ${selectedAddressId === addr._id
-                        ? "border-sky-400 bg-sky-50"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? "border-sky-400 bg-sky-50 dark:bg-sky-900"
+                        : "border-gray-200 dark:border-gray-600 hover:border-gray-300"
                       }`}
                   >
-                    <p className="font-semibold text-gray-800">{addr.fullName} <span className="text-gray-500 font-normal text-sm">({addr.phone})</span></p>
-                    <p className="text-sm text-gray-600">
+                    <p className="font-semibold text-gray-800 dark:text-gray-100">{addr.fullName} <span className="text-gray-500 dark:text-gray-400 font-normal text-sm">({addr.phone})</span></p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ""}
                     </p>
-                    <p className="text-sm text-gray-600">{addr.city}, {addr.state} - {addr.pincode}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{addr.city}, {addr.state} - {addr.pincode}</p>
                   </div>
                 ))}
                 <button onClick={() => { setShowNewForm(true); setSelectedAddressId(null); }}
-                  className="w-full border-2 border-dashed border-gray-300 rounded-xl p-4 text-gray-500 hover:border-sky-400 hover:text-sky-600 transition font-medium text-sm">
+                  className="w-full border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-gray-500 dark:text-gray-400 hover:border-sky-400 hover:text-sky-600 transition font-medium text-sm">
                   + Add New Address
                 </button>
               </div>
@@ -195,46 +195,46 @@ const Checkout = () => {
                 )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name *</label>
                     <input type="text" name="fullName" value={address.fullName} onChange={handleChange}
                       placeholder="John Doe"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number *</label>
                     <input type="tel" name="phone" value={address.phone} onChange={handleChange}
                       placeholder="9876543210" maxLength="10"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 1 *</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address Line 1 *</label>
                     <input type="text" name="addressLine1" value={address.addressLine1} onChange={handleChange}
                       placeholder="House/Flat No., Building, Street"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 2</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address Line 2</label>
                     <input type="text" name="addressLine2" value={address.addressLine2} onChange={handleChange}
                       placeholder="Landmark, Area (optional)"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City *</label>
                     <input type="text" name="city" value={address.city} onChange={handleChange}
                       placeholder="Mumbai"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">State *</label>
                     <input type="text" name="state" value={address.state} onChange={handleChange}
                       placeholder="Maharashtra"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Pincode *</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pincode *</label>
                     <input type="text" name="pincode" value={address.pincode} onChange={handleChange}
                       placeholder="400001" maxLength="6"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
+                      className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent" />
                   </div>
                 </div>
               </>
@@ -242,7 +242,7 @@ const Checkout = () => {
           </div>
 
           {/* Terms */}
-          <div className="bg-white rounded-2xl shadow-md p-6 mt-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mt-6">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <span className="bg-gray-900 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm">2</span>
               Terms & Conditions
@@ -250,7 +250,7 @@ const Checkout = () => {
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" checked={agreed} onChange={() => setAgreed(!agreed)}
                 className="mt-1 w-4 h-4 accent-blue-600" />
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
                 I agree to the rental terms and conditions. I understand that the security deposit will be refunded upon return of the product in good condition.
               </span>
             </label>
@@ -259,20 +259,20 @@ const Checkout = () => {
 
         {/* Right - Order Summary */}
         <div className="lg:w-2/5">
-          <div className="bg-white rounded-2xl shadow-md p-6 sticky top-24">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 sticky top-24">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
 
             <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
               {cartItems.map((item, idx) => {
                 const prodId = item.productId?._id || item.productId;
                 return (
-                  <div key={`${prodId}-${item.duration}-${idx}`} className="flex gap-3 p-2 bg-gray-50 rounded-lg">
+                  <div key={`${prodId}-${item.duration}-${idx}`} className="flex gap-3 p-2 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     {item.image && (
                       <img src={item.image} alt={item.name} className="w-14 h-14 object-cover rounded-lg" />
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{item.name}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {item.duration} x {item.quantity} | &#8377;{item.price}
                       </p>
                     </div>
@@ -290,17 +290,17 @@ const Checkout = () => {
               return (
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Rental Amount</span>
+                    <span className="text-gray-600 dark:text-gray-400">Rental Amount</span>
                     <span>&#8377;{rentalTotal}</span>
                   </div>
                   {securityTotal > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Security Deposit</span>
+                      <span className="text-gray-600 dark:text-gray-400">Security Deposit</span>
                       <span className="text-sky-600">&#8377;{securityTotal}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Delivery</span>
+                    <span className="text-gray-600 dark:text-gray-400">Delivery</span>
                     <span className="text-sky-500 font-medium">Free</span>
                   </div>
                   <hr />
@@ -329,7 +329,7 @@ const Checkout = () => {
               {placing ? "Redirecting to Payment..." : "Pay & Place Order"}
             </button>
 
-            <p className="text-xs text-gray-400 text-center mt-3">
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-3">
               Secure checkout powered by Stripe. Your payment information is protected.
             </p>
           </div>

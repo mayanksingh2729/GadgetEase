@@ -96,11 +96,11 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center py-10">
-      <div className="bg-white shadow-2xl rounded-lg px-6 pt-5 pb-4 w-100 animate-fadeIn">
+      <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-lg px-4 sm:px-6 pt-5 pb-4 w-full max-w-md mx-auto animate-fadeIn">
         <div className="relative flex flex-col items-center">
-          <img src={formData.image} alt="Profile" className="w-24 h-24 rounded-full border-4 border-gray-300 cursor-pointer" onClick={() => setShowAvatarOptions(!showAvatarOptions)} />
+          <img src={formData.image} alt="Profile" className="w-24 h-24 rounded-full border-4 border-gray-300 dark:border-gray-600 cursor-pointer" onClick={() => setShowAvatarOptions(!showAvatarOptions)} />
           {showAvatarOptions && (
-            <div className="absolute top-24 bg-white shadow-lg rounded-lg p-2 flex gap-2 z-10">
+            <div className="absolute top-24 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-2 flex flex-wrap gap-2 z-10">
               {avatars.map((avatar, index) => (
                 <img key={index} src={avatar} alt="Avatar" className="w-12 h-12 rounded-full cursor-pointer hover:border-2 hover:border-blue-500" onClick={() => handleAvatarSelect(avatar)} />
               ))}
@@ -108,25 +108,25 @@ const Signup = () => {
           )}
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-700 mt-4 text-center">Create Your Account</h2>
-        <hr className="my-4 border-gray-300" />
+        <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-100 mt-4 text-center">Create Your Account</h2>
+        <hr className="my-4 border-gray-300 dark:border-gray-600" />
         <form onSubmit={handleSubmit}>
           <div className="mb-2">
-            <label className="text-gray-700 font-semibold">Name</label>
-            <input type="text" name="name" placeholder="Enter your name" value={formData.name} onChange={handleChange} required className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
+            <label className="text-gray-700 dark:text-gray-300 font-semibold">Name</label>
+            <input type="text" name="name" placeholder="Enter your name" value={formData.name} onChange={handleChange} required className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
           </div>
           <div className="mb-2">
-            <label className="text-gray-700 font-semibold">Email</label>
-            <input type="email" name="email" placeholder="Enter your email" value={formData.email} onChange={handleChange} required className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
+            <label className="text-gray-700 dark:text-gray-300 font-semibold">Email</label>
+            <input type="email" name="email" placeholder="Enter your email" value={formData.email} onChange={handleChange} required className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
           </div>
           <div className="relative mb-2">
-            <label className="text-gray-700 font-semibold">Password</label>
-            <input type={showPassword ? "text" : "password"} name="password" placeholder="Enter your password" value={formData.password} onChange={handleChange} required className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
+            <label className="text-gray-700 dark:text-gray-300 font-semibold">Password</label>
+            <input type={showPassword ? "text" : "password"} name="password" placeholder="Enter your password" value={formData.password} onChange={handleChange} required className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
             <img src={showPassword ? eyeOpen : eyeClosed} alt="Toggle" className="absolute right-3 top-10 w-6 h-6 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
           </div>
           <div className="relative mb-4">
-            <label className="text-gray-700 font-semibold">Confirm Password</label>
-            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Re-enter your password" value={formData.confirmPassword} onChange={handleChange} required className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
+            <label className="text-gray-700 dark:text-gray-300 font-semibold">Confirm Password</label>
+            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Re-enter your password" value={formData.confirmPassword} onChange={handleChange} required className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 mt-1" />
             <img src={showConfirmPassword ? eyeOpen : eyeClosed} alt="Toggle" className="absolute right-3 top-10 w-6 h-6 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
           </div>
           <button type="submit" disabled={loading}

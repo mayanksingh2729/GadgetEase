@@ -1,6 +1,8 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Cart = require("../models/Cart");
 const Order = require("../models/Order");
+const User = require("../models/User");
+const { sendOrderConfirmationEmail } = require("../config/mailer");
 
 // Create Stripe Checkout Session (NO order created yet)
 exports.createCheckoutSession = async (req, res) => {
@@ -49,8 +51,8 @@ exports.createCheckoutSession = async (req, res) => {
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:5173/checkout?payment=cancelled`,
+      success_url: `${process.env.CLIENT_URL || "http://localhost:5173"}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL || "http://localhost:5173"}/checkout?payment=cancelled`,
       metadata: {
         userId: userId,
         shippingAddress: JSON.stringify(shippingAddress),
@@ -94,10 +96,20 @@ exports.verifyPayment = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
+    // Compute rental dates for each item
+    const itemsWithDates = cart.items.map((item) => {
+      const now = new Date();
+      const end = new Date(now);
+      if (item.duration === "day") end.setDate(end.getDate() + 1);
+      else if (item.duration === "week") end.setDate(end.getDate() + 7);
+      else if (item.duration === "month") end.setDate(end.getDate() + 30);
+      return { ...item.toObject(), startDate: now, endDate: end, returnStatus: "not-returned" };
+    });
+
     // NOW create the order — only after payment is confirmed
     const order = new Order({
       userId,
-      items: cart.items,
+      items: itemsWithDates,
       shippingAddress,
       totalAmount: cart.totalAmount,
       status: "confirmed",
@@ -109,6 +121,26 @@ exports.verifyPayment = async (req, res) => {
     // Clear cart
     cart.items = [];
     await cart.save();
+
+    // Emit new order notification to admins
+    const io = req.app.get("io");
+    if (io) {
+      io.to("admins").emit("new-order", {
+        orderId: order._id,
+        totalAmount: order.totalAmount,
+        message: `New order #${order._id.toString().slice(-8)} placed for ₹${order.totalAmount}`,
+      });
+    }
+
+    // Send order confirmation email
+    try {
+      const orderUser = await User.findById(userId).select("email");
+      if (orderUser?.email) {
+        await sendOrderConfirmationEmail(orderUser.email, order);
+      }
+    } catch (emailErr) {
+      console.error("Failed to send order confirmation email:", emailErr.message);
+    }
 
     return res.json({ message: "Payment verified successfully", order });
   } catch (error) {

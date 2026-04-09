@@ -89,12 +89,12 @@ const Cart = () => {
       {/* Cart Section */}
       <div className="flex flex-col md:flex-row gap-6">
         {/* Left - Cart Items */}
-        <div className="md:w-2/3 bg-white p-6 shadow-lg rounded-xl">
+        <div className="md:w-2/3 bg-white dark:bg-gray-800 p-6 shadow-lg rounded-xl">
           <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
 
           {cartItems.length === 0 ? (
             <div className="text-center py-10">
-              <p className="text-gray-500 text-lg mb-4">Your cart is empty.</p>
+              <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">Your cart is empty.</p>
               <button onClick={() => navigate("/")}
                 className="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition">
                 Browse Products
@@ -106,10 +106,10 @@ const Cart = () => {
               return (
                 <div
                   key={`${prodId}-${item.duration}`}
-                  className="flex items-center justify-between p-4 border-b last:border-b-0 hover:bg-gray-50 rounded-lg transition"
+                  className="flex flex-wrap sm:flex-nowrap items-center justify-between p-4 border-b dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition"
                 >
                   {/* Image */}
-                  <div className="w-20 h-20 flex-shrink-0">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
                     <img
                       src={item.image || "https://via.placeholder.com/80"}
                       alt={item.name}
@@ -120,8 +120,8 @@ const Cart = () => {
                   {/* Details */}
                   <div className="flex-1 px-4">
                     <h3 className="text-lg font-bold">{item.name}</h3>
-                    <p className="text-sm text-gray-500">{item.brand} | {item.duration}</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{item.brand} | {item.duration}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       Rental: &#8377;{item.price} x {item.quantity} = &#8377;{item.price * item.quantity}
                     </p>
                     {(item.security || 0) > 0 && (
@@ -129,23 +129,23 @@ const Cart = () => {
                         Security Deposit: &#8377;{item.security} x {item.quantity} = &#8377;{item.security * item.quantity}
                       </p>
                     )}
-                    <p className="text-sm font-bold text-gray-800 mt-1">
+                    <p className="text-sm font-bold text-gray-800 dark:text-gray-100 mt-1">
                       Item Total: &#8377;{item.price * item.quantity + (item.security || 0) * item.quantity}
                     </p>
                   </div>
 
                   {/* Controls */}
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 mt-2 sm:mt-0 w-full sm:w-auto justify-end">
                     <button
                       onClick={() => updateCart(prodId, item.duration, -1)}
-                      className="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-lg font-bold transition"
+                      className="bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 w-8 h-8 rounded-lg font-bold transition"
                     >
                       -
                     </button>
                     <span className="w-8 text-center font-semibold">{item.quantity}</span>
                     <button
                       onClick={() => updateCart(prodId, item.duration, 1)}
-                      className="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-lg font-bold transition"
+                      className="bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 w-8 h-8 rounded-lg font-bold transition"
                     >
                       +
                     </button>
@@ -165,23 +165,23 @@ const Cart = () => {
         {/* Right - Summary */}
         {cartItems.length > 0 && (
           <div className="md:w-1/3">
-            <div className="bg-white p-6 shadow-lg rounded-xl sticky top-24">
+            <div className="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-xl sticky top-24">
               <h2 className="text-xl font-bold mb-4">Order Summary</h2>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Total Items</span>
+                  <span className="text-gray-600 dark:text-gray-400">Total Items</span>
                   <span>{totalQuantity}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Rental Amount</span>
+                  <span className="text-gray-600 dark:text-gray-400">Rental Amount</span>
                   <span>&#8377;{rentalTotal}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Security Deposit</span>
+                  <span className="text-gray-600 dark:text-gray-400">Security Deposit</span>
                   <span className="text-sky-600">&#8377;{securityTotal}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Delivery</span>
+                  <span className="text-gray-600 dark:text-gray-400">Delivery</span>
                   <span className="text-sky-500 font-medium">Free</span>
                 </div>
                 <hr />

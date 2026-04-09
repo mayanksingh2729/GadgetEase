@@ -1,29 +1,45 @@
 const Product = require('../models/Product');
 // const asyncHandler = require("express-async-handler");
 
-// Get all products
-exports.getAllProducts = (req, res) => {
-  let { category } = req.query;
-  let query = {};
+// Get all products (with optional pagination and category filter)
+exports.getAllProducts = async (req, res) => {
+  try {
+    let { category, page, limit } = req.query;
+    let query = {};
 
-  if (category) {
-    category = category.trim(); // clean up whitespace
-    query.category = { $regex: `^${category}$`, $options: "i" }; // strict but case-insensitive
+    if (category) {
+      category = category.trim();
+      query.category = { $regex: `^${category}$`, $options: "i" };
+    }
+
+    // If page is provided, use pagination
+    if (page) {
+      const pageNum = parseInt(page) || 1;
+      const limitNum = parseInt(limit) || 12;
+      const skip = (pageNum - 1) * limitNum;
+
+      const [products, total] = await Promise.all([
+        Product.find(query).skip(skip).limit(limitNum),
+        Product.countDocuments(query),
+      ]);
+
+      return res.json({
+        products,
+        total,
+        page: pageNum,
+        totalPages: Math.ceil(total / limitNum),
+      });
+    }
+
+    // No pagination - return all (backward compatible)
+    const products = await Product.find(query);
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found" });
+    }
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err });
   }
-
-  console.log("Incoming category filter:", category);
-  console.log("Mongo query being used:", query);
-
-  Product.find(query)
-    .then(products => {
-      if (products.length === 0) {
-        return res.status(404).json({ message: 'No products found' });
-      }
-      res.json(products);
-    })
-    .catch(err => {
-      res.status(500).json({ message: 'Server error', error: err });
-    });
 };
 
 // ✅ FIXED: Get a product by its **custom string ID**
@@ -57,6 +73,41 @@ exports.getCategories = async (req, res) => {
       { $sort: { name: 1 } },
     ]);
     res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err });
+  }
+};
+
+// Search products with pagination
+exports.searchProducts = async (req, res) => {
+  try {
+    const { q, page = 1, limit = 12 } = req.query;
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    let query = {};
+    let sort = {};
+
+    if (q && q.trim()) {
+      query = { $text: { $search: q.trim() } };
+      sort = { score: { $meta: "textScore" } };
+    }
+
+    const [products, total] = await Promise.all([
+      Product.find(query, q ? { score: { $meta: "textScore" } } : {})
+        .sort(sort)
+        .skip(skip)
+        .limit(limitNum),
+      Product.countDocuments(query),
+    ]);
+
+    res.json({
+      products,
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum),
+    });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err });
   }

@@ -8,11 +8,11 @@ const Footer = () => {
         {/* Left Side: Subscribe Section */}
         <div className="md:w-2/8">
           <h2 className="text-xl font-bold text-sky-400">Subscribe to our newsletter for updates.</h2>
-          <div className="mt-3 flex gap-6">
+          <div className="mt-3 flex flex-col sm:flex-row gap-3 sm:gap-6">
             <input
               type="email"
               placeholder="Enter your email"
-              className="p-2 w-full border border-gray-300 rounded-md text-sky-400 focus:outline-none"
+              className="p-2 w-full border border-gray-600 rounded-md text-sky-400 bg-gray-900 focus:outline-none"
             />
             <button className="bg-blue-500 text-white font-bold text-lg px-4 py-2 rounded-md transform transition-all duration-300 hover:scale-105 hover:bg-black hover:text-sky-400">
               Subscribe
@@ -76,7 +76,7 @@ const Footer = () => {
         </div>
 
         {/* Social Media Links */}
-        <div className="flex gap-6">
+        <div className="flex gap-4 sm:gap-6 flex-wrap justify-center">
           <a href="#" target="_blank" rel="noopener noreferrer">
           <img width="64" height="64" src="https://img.icons8.com/nolan/64/facebook-new.png" alt="facebook-new"/>
           </a>
